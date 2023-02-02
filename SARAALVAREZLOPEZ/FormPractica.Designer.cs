@@ -230,6 +230,7 @@
             this.btnnuevopedido.TabIndex = 24;
             this.btnnuevopedido.Text = "Nuevo pedido";
             this.btnnuevopedido.UseVisualStyleBackColor = true;
+            this.btnnuevopedido.Click += new System.EventHandler(this.btnnuevopedido_Click);
             // 
             // btnmodificarcliente
             // 

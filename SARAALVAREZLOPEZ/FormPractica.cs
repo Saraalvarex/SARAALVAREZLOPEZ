@@ -59,5 +59,14 @@ namespace SARAALVAREZLOPEZ
 
             this.repo.UpdateCliente(empresa, contacto, cargo, ciudad, telefono);
         }
+
+        private void btnnuevopedido_Click(object sender, EventArgs e)
+        {
+            string cod=this.txtcodigopedido.Text;
+            int imp= int.Parse(this.txtimporte.Text);
+            DateTime fech= DateTime.Parse(this.txtfechaentrega.Text.ToString());
+            string form= this.txtformaenvio.Text;
+            this.repo.InsertPedido(cod, fech, form, imp);
+        }
     }
 }

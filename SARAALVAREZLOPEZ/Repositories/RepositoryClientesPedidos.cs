@@ -1,4 +1,5 @@
-﻿using SARAALVAREZLOPEZ.Helpers;
+﻿using Microsoft.VisualBasic;
+using SARAALVAREZLOPEZ.Helpers;
 using SARAALVAREZLOPEZ.Models;
 using System;
 using System.Collections.Generic;
@@ -9,8 +10,44 @@ using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using static System.ComponentModel.Design.ObjectSelectorEditor;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
+
+#region PROCEDURES GET
+//CREATE PROCEDURE SP_CLIENTES
+//(@NOMBRE NVARCHAR(50)= NULL)
+//AS
+//   IF @NOMBRE IS NULL
+//    BEGIN
+//       SELECT * FROM CLIENTES;
+//END
+//ELSE
+//	BEGIN
+//		SELECT * FROM CLIENTES WHERE Contacto = @NOMBRE
+//	END
+//GO
+
+//--SACAR PEDIDOS DE UN CLIENTE
+//ALTER PROCEDURE SP_PEDIDOS
+//(@NOMBRE NVARCHAR(50))
+//AS
+//    DECLARE @CODCLI NVARCHAR(4)
+//	SELECT @CODCLI = CodigoCliente FROM CLIENTES
+//	WHERE CONTACTO=@NOMBRE
+//	select * FROM pedidos
+//	WHERE CodigoCliente=@CODCLI
+//GO
+
+//ALTER PROCEDURE SP_DATOS_PEDIDO
+//(@CODPEDIDO NVARCHAR(50))
+//AS
+//	select * FROM pedidos
+//	WHERE CodigoPedido=@CODPEDIDO
+//GO
+//--EXEC SP_DATOS_PEDIDO 'Diciembre-02-2018'
+
+#endregion
 
 namespace SARAALVAREZLOPEZ.Repositories
 {
@@ -115,7 +152,7 @@ namespace SARAALVAREZLOPEZ.Repositories
             return pedido;
         }
         #region SP_UPDATE_CLIENTES
-        //ALTER PROCEDURE SP_UPDATE_CLIENTES
+        //CREATE PROCEDURE SP_UPDATE_CLIENTES
         //(@EMPRESA NVARCHAR(50),
         //@CONTACTO NVARCHAR(50),
         //@CARGO NVARCHAR(50),
@@ -124,12 +161,16 @@ namespace SARAALVAREZLOPEZ.Repositories
         //AS
         //    DECLARE @CODCLI NVARCHAR(4)
 
-        //    SELECT* FROM CLIENTES
-        //    WHERE Contacto=@CONTACTO
+        //    SELECT @CODCLI = CodigoCliente FROM CLIENTES
+
+        //    WHERE Contacto = @CONTACTO
+
         //    UPDATE CLIENTES
-        //    SET EMPRESA=@EMPRESA, Contacto=@CONTACTO,
-        // Cargo=@CARGO, Ciudad=@CIUDAD, Telefono=@TLF
-        //    WHERE CodigoCliente=@CODCLI
+
+        //    SET EMPRESA = @EMPRESA, Contacto = @CONTACTO,
+        //    Cargo = @CARGO, Ciudad = @CIUDAD, Telefono = @TLF
+
+        //    WHERE CodigoCliente = @CODCLI
         //GO
         #endregion
         public void UpdateCliente(string empresa, string contacto, string cargo, string ciudad, int tlf)
@@ -153,6 +194,36 @@ namespace SARAALVAREZLOPEZ.Repositories
             this.com.Parameters.Clear();
             MessageBox.Show("Clientes modficiados: " + modificados);
         }
+        #region sp_insert
+        //CREATE PROCEDURE SP_INSERT_PEDIDO
+        //(@CODPEDIO NVARCHAR(50),
+        //@FECHA DATETIME,
+        //@FORMAENVIO NVARCHAR(50),
+        //@IMPORTE INT)
+        //AS
+        //INSERT INTO pedidos VALUES
+        //(@CODPEDIO, 'PRY', @FECHA, @FORMAENVIO, @IMPORTE)
+        //GO
+        #endregion
 
+        public void InsertPedido(string codpedido, DateTime fecha, string envio, int importe)
+        {
+            SqlParameter pamcod = new SqlParameter("@CODPEDIO", codpedido);
+            this.com.Parameters.Add(pamcod);
+            SqlParameter pamdatefech = new SqlParameter("@FECHA", fecha);
+            this.com.Parameters.Add(pamdatefech);
+            SqlParameter pamenvio = new SqlParameter("@FORMAENVIO", envio);
+            this.com.Parameters.Add(pamenvio);
+            SqlParameter pamin = new SqlParameter("@IMPORTE", importe);
+            this.com.Parameters.Add(pamin);
+            this.com.CommandType = CommandType.StoredProcedure;
+            this.com.CommandText = "SP_INSERT_PEDIDO";
+            this.cn.Open();
+            int insertados = this.com.ExecuteNonQuery();
+            this.rdr.Close();
+            this.cn.Close();
+            this.com.Parameters.Clear();
+            MessageBox.Show("PEDIO INSERTADO");
+        }
     }
 }
